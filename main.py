@@ -18,11 +18,18 @@ def parse_post(url='http://ailev.livejournal.com/1274596.html'):
         return None
 
     soup = BeautifulSoup(r.text, 'html.parser')
-    title = soup.find('h1', class_='entry-title').text.strip()
+    try:
+        title = soup.find('h1', class_='entry-title').text.strip()
+    except:
+        title = ''
     h = html2text.HTML2Text()
-    content = soup.find('article', class_='entry-content').text.strip('\n ')
-    cleared = h.handle(content)
-
+    try:
+        content = soup.find('article', class_='entry-content').text.strip('\n ')
+        cleared = h.handle(content).strip('\n ')
+    except:
+        cleared = ''
+    if len(title) == 0 and len(cleared) == 0:
+        title = '#FAILED'
     return (url, title, cleared)
 
 
@@ -128,4 +135,3 @@ def main(nb, save_dir):
 
 if __name__ == '__main__':
     main()
-
