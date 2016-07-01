@@ -88,7 +88,9 @@ def all_links(root='http://ailev.livejournal.com/', nb=10, path='post-list.txt')
         if x:
             links.extend(x)
 
+    links = list(set(links))
     links.sort()
+    
 
     with open(path, 'w') as fout:
         fout.writelines(x + '\n' for x in links)
@@ -108,6 +110,7 @@ def fetch_list(links, nb=4):
     pool.join()
     t1 = time()
     print('Done for {:.2f} minutes'.format((t1 - t0)/60))
+    work = [_ for _ in work if _]
     work.sort(key=lambda t: t[0])
 
     return work
