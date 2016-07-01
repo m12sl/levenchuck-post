@@ -108,7 +108,7 @@ def fetch_list(links, nb=4):
     pool.join()
     t1 = time()
     print('Done for {:.2f} minutes'.format((t1 - t0)/60))
-    work.sort()
+    work.sort(key=lambda t: t[0])
 
     return work
 
