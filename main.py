@@ -6,9 +6,24 @@ from time import time
 import os
 
 from multiprocessing import Pool
+import html2text
 
 
 import click
+
+
+def parse_post(url='http://ailev.livejournal.com/1274596.html'):
+    r = requests.get(url)
+    if r.status_code != 200:
+        return None
+
+    soup = BeautifulSoup(r.text, 'html.parser')
+    title = soup.find('h1', class_='entry-title').text.strip()
+    h = html2text.HTML2Text()
+    content = soup.find('article', class_='entry-content').text.strip('\n ')
+    cleared = h.handle(content)
+
+    return (url, title, cleared)
 
 
 def list_days(root_url='http://ailev.livejournal.com/'):
@@ -57,22 +72,38 @@ def all_links(root='http://ailev.livejournal.com/', nb=10, path='post-list.txt')
 
     pool = Pool(processes=nb)
     it = pool.imap_unordered(list_posts, days)
-    work = list(tqdm(it))
+    work = list(tqdm(it, total=len(days)))
     pool.close()
     pool.join()
 
-    print(work)
     links = []
     for x in work:
         if x:
             links.extend(x)
-    print(links)
+
+    links.sort()
 
     with open(path, 'w') as fout:
-        fout.writelines(x + '\n' for x in sorted(links))
+        fout.writelines(x + '\n' for x in links)
 
     t1 = time()
     print('Done for {}s'.format(t1 - t0))
+    return links
+
+
+def fetch_list(links, nb=4):
+    print('Going to mp load all {} pages'.format(len(links)))
+    t0 = time()
+    pool = Pool(processes=nb)
+    it = pool.imap_unordered(parse_post, links)
+    work = list(tqdm(it, total=len(links)))
+    pool.close()
+    pool.join()
+    t1 = time()
+    print('Done for {:.2f} minutes'.format((t1 - t0)/60))
+    work.sort()
+
+    return work
 
 
 @click.command()
@@ -84,7 +115,15 @@ def main(nb, save_dir):
     except OSError:
         pass
 
-    all_links(nb=nb, path=os.path.join(save_dir, 'post-list.txt'))
+    links = all_links(nb=nb, path=os.path.join(save_dir, 'post-list.txt'))
+
+    data = fetch_list(links, nb=nb)
+    print('Store data')
+    with open(os.path.join(save_dir, 'allj.txt'), 'w') as fout:
+        for (url, title, content) in tqdm(data):
+            fout.write('<post href="{}">{}\n'.format(url, title))
+            fout.write(content)
+            fout.write('\n</post>\n')
 
 
 if __name__ == '__main__':
