@@ -1,5 +1,3 @@
-# The Levenchuk Post Project
-
 ![tLPp](img/logo.png)
 
 Status: under development.
@@ -44,7 +42,6 @@ Will result in three files:
 
 ## Train baseline model:
 
-Not ready
 ```
 python train.py
 ```
@@ -53,5 +50,12 @@ python train.py
 Not ready
 
 
+TODO:
+
+1. Check restorable
+2. Add history
+3. Add summary
+4. Dockerize train procedure
+5. Tensorflow Serving for bottification
 
  
