@@ -38,7 +38,7 @@ def list_days(root_url='http://ailev.livejournal.com/'):
     """
     hrefs = []
     # TODO: take list of years from livejournal, not rule.
-    for year in tqdm(range(2002, 2003)):
+    for year in tqdm(range(2002, 2018)):
         calendar = root_url + '{}/'.format(year)
         r = requests.get(calendar)
         if r.status_code != 200:

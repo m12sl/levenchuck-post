@@ -6,7 +6,12 @@ from collections import Counter
 from tqdm import tqdm
 
 
-def load_dumped(path='tmp/allj.txt'):
+def filter_text(text):
+    url_pattern = '(https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})'
+    return re.sub(url_pattern, '#url', text)
+
+
+def load_dumped(path):
     data = []
     with open(path, 'r') as fin:
         tmp = []
@@ -27,7 +32,7 @@ def generate_charset():
     eng = [chr(_) for _ in range(ord('a'), ord('z') + 1)]
     alphabet = rus + eng + [_.upper() for _ in rus + eng]
     nums = list('0123456789')
-    punkt = list(' !?,.\"\':-()><\n')
+    punkt = list(' !?,.\"\':-()><#\n')
     return alphabet + nums + punkt + ['oov']
 
 
