@@ -150,3 +150,6 @@ ENV/
 
 # IDEA
 .idea/
+
+
+models/
