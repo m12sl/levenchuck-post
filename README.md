@@ -1,4 +1,6 @@
-# Das Lebenchuck LJ Downloader
+# The Levenchuk Post Project
+
+![tLPp](img/logo.png)
 
 Usage:
 ```
