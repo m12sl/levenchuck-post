@@ -14,7 +14,7 @@ from model import CharRNN as Model
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--save_dir', type=str, default='save',
+    parser.add_argument('--save_dir', type=str, default='../models/tmp',
                         help='directory to store checkpointed models')
 
     parser.add_argument('--vocab', type=str, default='../data/processed/vocab.json',
