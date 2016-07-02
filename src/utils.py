@@ -67,30 +67,39 @@ def alphabet(data):
     print('Texts stats:', texts)
 
 
+def prepare_dataset(path):
+    data = load_dumped(path)
+
+    idx = np.arange(len(data))
+    np.random.seed(19)
+    np.random.shuffle(idx)
+
+    # shuffle data
+    data = [data[_] for _ in idx]
+
+
+    test_len = 10
+    test_posts, train_posts = data[:test_len], data[test_len:]
+
+    # drop titles
+    test_text = "".join(_[1] for _ in test_posts)
+    train_text = "".join(_[1] for _ in train_posts)
+
+    vocab = generate_vocab()
+    test = encode_text(test_text, vocab)
+    train = encode_text(train_text, vocab)
+
+    np.save('test', test)
+    np.save('train', test)
+
+
 if __name__ == "__main__":
     data = load_dumped()
 
     alphabet(data)
 
 
-    idx = np.arange(len(data))
-    np.random.seed(19)
-    np.random.shuffle(idx)
 
-    data = [data[_] for _ in idx]
-    val_len = 10
-    val_posts, train_posts = data[:val_len], data[val_len:]
-
-    # take only content:
-    
-    val_text = "".join(_[1] for _ in val_posts)
-    train_text = "".join(_[1] for _ in train_posts)
-    
-    vocab = generate_vocab()
-    val = encode_text(val_text, vocab)
-    train = encode_text(train_text, vocab)
-
-    np.save('val', val)
             
 
 

@@ -13,7 +13,7 @@ Usage:
 
 0. Get raw data.
 ```
-python downloader --nb 4 --save-dir tmp/
+python download --nb 4 --save-dir tmp/
 ```
 
 Will result in two files in save-dir:

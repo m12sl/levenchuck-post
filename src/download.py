@@ -4,11 +4,8 @@ from bs4 import BeautifulSoup
 from tqdm import tqdm
 from time import time
 import os
-
 from multiprocessing import Pool
 import html2text
-
-
 import click
 
 
@@ -40,6 +37,7 @@ def list_days(root_url='http://ailev.livejournal.com/'):
      list of links like `user.livejournal.com/year/month/day/`
     """
     hrefs = []
+    # TODO: take list of years from livejournal, not rule.
     for year in tqdm(range(2002, 2003)):
         calendar = root_url + '{}/'.format(year)
         r = requests.get(calendar)
@@ -87,10 +85,9 @@ def all_links(root='http://ailev.livejournal.com/', nb=10, path='post-list.txt')
     for x in work:
         if x:
             links.extend(x)
-
+    # there may be duplicates, don't know why, so fast walkaround
     links = list(set(links))
     links.sort()
-    
 
     with open(path, 'w') as fout:
         fout.writelines(x + '\n' for x in links)
@@ -118,7 +115,7 @@ def fetch_list(links, nb=4):
 
 @click.command()
 @click.option('--nb', default=4, help='number of workers')
-@click.option('--save-dir', default='tmp/')
+@click.option('--save-dir', default='../data/raw/')
 def main(nb, save_dir):
     try:
         os.mkdir(save_dir)
@@ -129,7 +126,7 @@ def main(nb, save_dir):
 
     data = fetch_list(links, nb=nb)
     print('Store data')
-    with open(os.path.join(save_dir, 'allj.txt'), 'w') as fout:
+    with open(os.path.join(save_dir, 'dump.txt'), 'w') as fout:
         for (url, title, content) in tqdm(data):
             fout.write('<post href="{}">{}\n'.format(url, title))
             fout.write(content)
