@@ -11,7 +11,7 @@ Tensorflow is required.
 
 Usage:
 
-0. Get raw data.
+## Get raw data.
 ```
 cd src
 python download --nb 4
@@ -30,7 +30,7 @@ Will result in two files in save-dir:
  ```
 
 
-1. Prepare data.
+## Prepare data.
 
 ```
 python prepare.py
@@ -42,14 +42,14 @@ Will result in three files:
 - test.npy -- encoded test set
 - vocab.json -- encoding table
 
-2. Train baseline model:
+## Train baseline model:
 
 Not ready
 ```
 python train.py
 ```
 
-3. Run the bot:
+## Run the bot:
 Not ready
 
 

@@ -8,7 +8,12 @@ from tqdm import tqdm
 
 def filter_text(text):
     url_pattern = '(https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})'
-    return re.sub(url_pattern, '#url', text)
+    url_filtered = re.sub(url_pattern, '#url', text)
+    cleared = url_filtered
+    for f, t in [('—', '-'), ('«', '"'), ('»', '"')]:
+        cleared = cleared.replace(f, t)
+
+    return cleared
 
 
 def load_dumped(path):
